@@ -7,7 +7,9 @@ object Boot {
   val numberOfCores = 4
 
   def tokenize(text: RDD[String]): RDD[String] =
-    text.flatMap(_.split(" "))
+    text
+      .flatMap(_.split(" "))
+      .filter(_.nonEmpty)
 
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf()
@@ -26,5 +28,7 @@ object Boot {
         .reduceByKey(_ + _)
 
     tokenAndCount.saveAsTextFile("./data/output")
+
+    sc.stop()
   }
 }
